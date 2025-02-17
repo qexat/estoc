@@ -1,0 +1,4 @@
+(executable
+ (public_name estoc)
+ (name main)
+ (libraries ansifmt estoc))

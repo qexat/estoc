@@ -1,0 +1,5 @@
+(library
+ (name estoc)
+ (libraries ansifmt))
+
+(include_subdirs qualified)
