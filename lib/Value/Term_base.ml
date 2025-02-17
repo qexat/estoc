@@ -21,7 +21,7 @@ let rec tokenize : t -> Formatting.Tree.t =
       [ simple
           [ Formatting.Token_type.Keyword, "forall"
           ; Formatting.Token.space
-          ; ( Formatting.Token_type.Parameter
+          ; ( Formatting.Token_type.Identifier
             , Prelude.format name ~using:(module Name) )
           ; Formatting.Token.comma
           ; Formatting.Token.space

@@ -40,7 +40,7 @@ let rec tokenize : t -> Formatting.Tree.t =
       [ simple
           [ Formatting.Token_type.Keyword, "fun"
           ; Formatting.Token.space
-          ; ( Formatting.Token_type.Parameter
+          ; ( Formatting.Token_type.Identifier
             , Prelude.format name ~using:(module Name) )
           ; Formatting.Token.space
           ; Formatting.Token_type.Operator_expr, "->"
