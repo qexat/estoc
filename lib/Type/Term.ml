@@ -23,8 +23,7 @@ let instantiate_variable (name : Name.t) : Index.t =
 ;;
 
 let rec of_value_term : Value.Term.t -> t = function
-  | Forall (name, value) ->
-    Forall (instantiate_variable name, of_value_term value)
+  | Forall (name, body) -> Forall (instantiate_variable name, of_value_term body)
   | Int _ -> Int
   | Unit -> Unit
   | Var name -> Var (instantiate_variable name)
@@ -37,9 +36,6 @@ end
 let eval ~(env : Env.t) : t -> (t, Error.t) result = function
   | Var index ->
     Env.get index env
-    |> Option.to_result
-         ~none:
-           (Error.Undefined_name
-              (List.nth !indices_to_names index))
+    |> Option.to_result ~none:(Error.Undefined_name (List.nth !indices_to_names index))
   | term -> Ok term
 ;;

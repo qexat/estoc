@@ -16,9 +16,7 @@ module type ENV = sig
   val tokenize : t -> Ansifmt.Formatting.Tree.t
 end
 
-module Make
-    (Key : Ansifmt.Formatting.TOKENIZABLE)
-    (Term : TOKENIZABLE_WITH_RELATION) :
+module Make (Key : Ansifmt.Formatting.TOKENIZABLE) (Term : TOKENIZABLE_WITH_RELATION) :
   ENV with type key = Key.t with type term = Term.t = struct
   type key = Key.t
   type term = Term.t
@@ -34,9 +32,7 @@ module Make
     | Some _ -> (key, term) :: List.remove_assoc key env
   ;;
 
-  let map (type term2) (func : term -> term2)
-    : t -> (key * term2) list
-    = function
+  let map (type term2) (func : term -> term2) : t -> (key * term2) list = function
     | [] -> []
     | env -> List.map (fun (key, term) -> key, func term) env
   ;;
@@ -48,11 +44,7 @@ module Make
     fun (key, term) ->
       block
         [ Key.tokenize key
-        ; simple
-            [ Formatting.Token.space
-            ; Term.relation_token
-            ; Formatting.Token.space
-            ]
+        ; simple [ Formatting.Token.space; Term.relation_token; Formatting.Token.space ]
         ; Term.tokenize term
         ; simple [ Formatting.Token.line_break ]
         ]
@@ -60,9 +52,7 @@ module Make
 
   let header_tokens =
     Formatting.Tree.simple
-      [ Formatting.Token_type.Documentation, "Environment:"
-      ; Formatting.Token.line_break
-      ]
+      [ Formatting.Token_type.Documentation, "Environment:"; Formatting.Token.line_break ]
   ;;
 
   let tokenize : t -> Formatting.Tree.t =

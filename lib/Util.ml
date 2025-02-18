@@ -34,8 +34,7 @@ module Index = struct
     fun index ->
       simple
         [ Formatting.Token_type.Variable_type, "?"
-        ; ( Formatting.Token_type.Variable_type
-          , Int.to_string index )
+        ; Formatting.Token_type.Variable_type, Int.to_string index
         ]
   ;;
 end

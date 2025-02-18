@@ -2,9 +2,7 @@ open Util
 
 type t = Stmt.t list
 
-let rec eval ~(env : Term.Env.t)
-  : t -> (Term.Env.t, Error.t) result
-  = function
+let rec eval ~(env : Term.Env.t) : t -> (Term.Env.t, Error.t) result = function
   | [] -> Ok env
   | first :: rest ->
     let* env = Stmt.eval ~env first in
@@ -19,9 +17,5 @@ let rec tokenize : t -> Formatting.Tree.t =
   | [] -> simple [ Formatting.Token_type.Comment, "(empty)" ]
   | last :: [] -> Stmt.tokenize last
   | first :: rest ->
-    block
-      [ Stmt.tokenize first
-      ; simple [ Formatting.Token.line_break ]
-      ; tokenize rest
-      ]
+    block [ Stmt.tokenize first; simple [ Formatting.Token.line_break ]; tokenize rest ]
 ;;

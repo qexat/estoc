@@ -12,15 +12,14 @@ let is_atomic : t -> bool = function
   | _ -> false
 ;;
 
-let rec eval ~(env : Term.Env.t) : t -> (Term.t, Error.t) result
-  = function
-  | App (Fun (Param name, value), arg) ->
+let rec eval ~(env : Term.Env.t) : t -> (Term.t, Error.t) result = function
+  | App (Fun (Param name, body), arg) ->
     let* arg_term = eval ~env arg in
-    eval ~env:(Term.Env.update_or_add name arg_term env) value
+    eval ~env:(Term.Env.update_or_add name arg_term env) body
   | App (_, _) -> Error Error.Illegal_application
-  | Fun (Param name, value) ->
-    let* value_term = eval ~env value in
-    Ok (Term.Forall (name, value_term))
+  | Fun (Param name, body) ->
+    let* body_term = eval ~env body in
+    Ok (Term.Forall (name, body_term))
   | Term term -> Term.eval ~env term
 ;;
 
@@ -40,8 +39,7 @@ let rec tokenize : t -> Formatting.Tree.t =
       [ simple
           [ Formatting.Token_type.Keyword, "fun"
           ; Formatting.Token.space
-          ; ( Formatting.Token_type.Identifier
-            , Prelude.format name ~using:(module Name) )
+          ; Formatting.Token_type.Identifier, Prelude.format name ~using:(module Name)
           ; Formatting.Token.space
           ; Formatting.Token_type.Operator_expr, "->"
           ; Formatting.Token.space

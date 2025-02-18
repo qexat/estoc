@@ -1,6 +1,6 @@
 open Ansifmt.Prelude
 open Estoc
-open Estoc.Util
+open Util
 
 let v_env : Value.Term.Env.t = []
 let t_env : Type.Term.Env.t = []

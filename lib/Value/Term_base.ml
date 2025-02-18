@@ -16,25 +16,19 @@ let is_atomic : t -> bool = function
 let rec tokenize : t -> Formatting.Tree.t =
   let open Formatting.Tree in
   function
-  | Forall (name, value) ->
+  | Forall (name, body) ->
     block
       [ simple
           [ Formatting.Token_type.Keyword, "forall"
           ; Formatting.Token.space
-          ; ( Formatting.Token_type.Identifier
-            , Prelude.format name ~using:(module Name) )
+          ; Formatting.Token_type.Identifier, Prelude.format name ~using:(module Name)
           ; Formatting.Token.comma
           ; Formatting.Token.space
           ]
-      ; parenthesize_if (Fun.negate is_atomic) tokenize value
+      ; parenthesize_if (Fun.negate is_atomic) tokenize body
       ]
-  | Int value ->
-    simple
-      [ ( Formatting.Token_type.Literal_constant
-        , Int.to_string value )
-      ]
-  | Unit ->
-    simple [ Formatting.Token_type.Literal_constant, "()" ]
+  | Int value -> simple [ Formatting.Token_type.Literal_constant, Int.to_string value ]
+  | Unit -> simple [ Formatting.Token_type.Literal_constant, "()" ]
   | Var name -> Name.tokenize name
 ;;
 
