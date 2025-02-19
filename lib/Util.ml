@@ -50,5 +50,14 @@ module List = struct
     in
     fun item list -> tailrec item list []
   ;;
+
+  let deduplicate : type item_t. item_t t -> item_t t =
+    let rec tailrec list acc =
+      match list with
+      | [] -> rev acc
+      | first :: rest ->
+        (tailrec [@tailrec]) rest (if mem first acc then acc else first :: acc)
+    in
+    fun list -> tailrec list []
   ;;
 end
