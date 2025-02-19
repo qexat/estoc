@@ -6,10 +6,8 @@ let eval ~(env : Term.Env.t) : t -> (Term.Env.t, Error.t) result = function
   | Let (name, body) ->
     let* term = Expr.eval ~env body in
     (match Term.Env.get name env with
-     | None -> Ok ((name, term) :: env)
-     | Some _ ->
-       (* TODO: implement unification algorithm *)
-       Ok (Term.Env.update_or_add name term env))
+     | None -> Ok (Term.Env.add name term env)
+     | Some _ -> Ok (Term.Env.update_lenient name term env))
 ;;
 
 let of_value_stmt : Value.Stmt.t -> t = function
