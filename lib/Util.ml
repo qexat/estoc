@@ -42,9 +42,13 @@ end
 module List = struct
   include List
 
-  let rec push : type item_t. item_t -> item_t t -> item_t t =
-    fun item -> function
-    | [] -> item :: []
-    | first :: rest -> first :: push item rest
+  let push : type item_t. item_t -> item_t t -> item_t t =
+    let rec tailrec item list acc =
+      match list with
+      | [] -> rev (item :: acc)
+      | first :: rest -> (tailrec [@tailrec]) item rest (first :: acc)
+    in
+    fun item list -> tailrec item list []
+  ;;
   ;;
 end
