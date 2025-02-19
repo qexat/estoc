@@ -17,10 +17,12 @@ let eval_checked ~(env : Term.Env.t) (source : t) : (Term.Env.t, Error.t) result
   Ok env
 ;;
 
-let run ~(env : Term.Env.t ref) (source : t) : (unit, Error.t) result =
-  let* new_env = eval ~env:!env source in
+let run ?(check : bool = true) ~(env : Term.Env.t ref) (source : t)
+  : (unit, Error.t) result
+  =
+  let eval_fn = if check then eval_checked else eval in
+  let* new_env = eval_fn ~env:!env source in
   env := new_env;
-  print_formatted ~line_end:"" !env ~using:(module Term.Env);
   Ok ()
 ;;
 
