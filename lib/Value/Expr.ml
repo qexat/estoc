@@ -15,7 +15,7 @@ let is_atomic : t -> bool = function
 let rec eval ~(env : Term.Env.t) : t -> (Term.t, Error.t) result = function
   | App (Fun (Param name, body), arg) ->
     let* arg_term = eval ~env arg in
-    eval ~env:(Term.Env.update_or_add name arg_term env) body
+    eval ~env:(Term.Env.update_lenient name arg_term env) body
   | App (_, _) -> Error Error.Illegal_application
   | Fun (Param name, body) ->
     let* body_term = eval ~env body in

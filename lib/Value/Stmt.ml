@@ -5,7 +5,7 @@ type t = Let of Name.t * Expr.t
 let eval ~(env : Term.Env.t) : t -> (Term.Env.t, Error.t) result = function
   | Let (name, expr) ->
     let* term = Expr.eval ~env expr in
-    Ok (Term.Env.update_or_add name term env)
+    Ok (Term.Env.update_lenient name term env)
 ;;
 
 open Ansifmt

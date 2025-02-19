@@ -10,7 +10,7 @@ and param = Param of Index.t
 let rec eval ~(env : Term.Env.t) : t -> (Term.t, Error.t) result = function
   | App (Fun (Param index, body), arg) ->
     let* arg_term = eval ~env arg in
-    eval ~env:(Term.Env.update_or_add index arg_term env) body
+    eval ~env:(Term.Env.update_lenient index arg_term env) body
   | App (_, _) -> Error Error.Illegal_application
   | Fun (Param index, body) ->
     let* body_term = eval ~env body in
