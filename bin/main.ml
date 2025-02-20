@@ -30,7 +30,7 @@ let main () : (unit, Any_error.t) result =
   (* comment the line below to disable execution *)
   let* () = Core.value_exec () in
   (* TODO: remove ; this is for debugging only *)
-  Type.Term.print_indices_to_names ();
+  Type.Term.print_name_indices ();
   Ok ()
 ;;
 
