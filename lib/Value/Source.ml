@@ -13,7 +13,7 @@ let rec eval ~(env : Term.Env.t) : t -> (Term.Env.t, Error.t) result = function
 let run ~(env : Term.Env.t ref) (source : t) : (unit, Error.t) result =
   let* new_env = eval ~env:!env source in
   env := new_env;
-  print_formatted ~line_end:"" !env ~using:(module Term.Env);
+  print_formatted !env ~using:(module Term.Env);
   Ok ()
 ;;
 

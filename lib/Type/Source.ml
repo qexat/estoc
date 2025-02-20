@@ -13,7 +13,7 @@ let rec eval ~(env : Term.Env.t) : t -> (Term.Env.t, Error.t) result = function
 let eval_checked ~(env : Term.Env.t) (source : t) : (Term.Env.t, Error.t) result =
   let* env = eval ~env source in
   (* TODO: do the check instead of just printing *)
-  print_formatted ~line_end:"" env ~using:(module Term.Env);
+  print_formatted env ~using:(module Term.Env);
   Ok env
 ;;
 
