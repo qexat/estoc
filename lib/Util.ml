@@ -60,4 +60,14 @@ module List = struct
     in
     fun list -> tailrec list []
   ;;
+
+  let intersperse : type item_t. item_t -> item_t t -> item_t t =
+    let rec tailrec item list acc =
+      match list with
+      | [] -> List.rev acc
+      | last :: [] -> tailrec item [] (last :: acc)
+      | first :: rest -> tailrec item rest (item :: first :: acc)
+    in
+    fun item list -> tailrec item list []
+  ;;
 end
