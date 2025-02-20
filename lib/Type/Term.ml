@@ -30,7 +30,7 @@ let rec of_value_term : Value.Term.t -> t = function
 ;;
 
 module Env = struct
-  include Env.Make (Index) (Term_base)
+  include Mapping.Make (Index) (Term_base)
 end
 
 let eval ~(env : Env.t) : t -> (t, Error.t) result = function
