@@ -2,23 +2,25 @@ open Ansifmt.Prelude
 open Util
 include Term_base
 
-let indices_to_names : Name.t list ref = ref []
-let get_index () = List.length !indices_to_names
+module Name_indices =
+  Mapping.Make
+    (Name)
+    (struct
+      include Index
 
-let print_indices_to_names () =
-  !indices_to_names
-  |> List.mapi (fun index name ->
-    Printf.sprintf
-      "%s -> %s"
-      (format index ~using:(module Index))
-      (format name ~using:(module Name)))
-  |> String.concat "\n"
-  |> Printf.printf "%s\n"
+      let relation_token = Ansifmt.Formatting.Token_type.Punctuation_strong, "->"
+    end)
+
+let name_indices = ref Name_indices.empty
+let make_index = Index.generator ~start:0
+
+let print_name_indices () =
+  format !name_indices ~using:(module Name_indices) |> Printf.printf "%s\n"
 ;;
 
 let instantiate_variable (name : Name.t) : Index.t =
-  let index = get_index () in
-  indices_to_names := List.push name !indices_to_names;
+  let index = make_index () in
+  name_indices := Name_indices.add name index !name_indices;
   index
 ;;
 
@@ -36,6 +38,8 @@ end
 let eval ~(env : Env.t) : t -> (t, Error.t) result = function
   | Var index ->
     Env.get index env
-    |> Option.to_result ~none:(Error.Undefined_name (List.nth !indices_to_names index))
+    |> Option.to_result
+         ~none:
+           (Error.Undefined_name (Name_indices.flip !name_indices |> List.assoc index))
   | term -> Ok term
 ;;
