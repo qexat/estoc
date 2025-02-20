@@ -115,11 +115,6 @@ module Make (Key : Ansifmt.Formatting.TOKENIZABLE) (Value : TOKENIZABLE_WITH_REL
         ]
   ;;
 
-  let header_tokens =
-    Formatting.Tree.simple
-      [ Formatting.Token_type.Documentation, "Environment:"; Formatting.Token.line_break ]
-  ;;
-
   let tokenize : t -> Formatting.Tree.t =
     let open Formatting.Tree in
     function
@@ -128,7 +123,6 @@ module Make (Key : Ansifmt.Formatting.TOKENIZABLE) (Value : TOKENIZABLE_WITH_REL
       rows (List.rev env)
       |> List.map tokenize_row
       |> List.intersperse (simple [ Formatting.Token.line_break ])
-      |> List.cons header_tokens
       |> block
   ;;
 end

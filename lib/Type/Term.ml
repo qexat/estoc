@@ -2,20 +2,26 @@ open Ansifmt.Prelude
 open Util
 include Term_base
 
-module Name_indices =
-  Mapping.Make
-    (Name)
-    (struct
-      include Index
+module Name_indices = struct
+  include
+    Mapping.Make
+      (Name)
+      (struct
+        include Index
 
-      let relation_token = Ansifmt.Formatting.Token_type.Punctuation_strong, "->"
-    end)
+        let relation_token = Ansifmt.Formatting.Token_type.Punctuation_strong, "->"
+      end)
+end
 
 let name_indices = ref Name_indices.empty
 let make_index = Index.generator ~start:0
 
 let print_name_indices () =
-  format !name_indices ~using:(module Name_indices) |> Printf.printf "%s\n"
+  let open Ansifmt.Formatting in
+  Tree.format
+    (Tree.simple [ Token_type.Documentation, "de Bruijn indices:"; Token.line_break ])
+  ^ format !name_indices ~using:(module Name_indices)
+  |> Printf.printf "%s\n"
 ;;
 
 let instantiate_variable (name : Name.t) : Index.t =
@@ -33,6 +39,18 @@ let rec of_value_term : Value.Term.t -> t = function
 
 module Env = struct
   include Mapping.Make (Index) (Term_base)
+
+  let tokenize_base = tokenize
+
+  open Ansifmt
+
+  let tokenize (env : t) : Formatting.Tree.t =
+    let open Formatting in
+    Tree.block
+      [ Tree.simple [ Token_type.Documentation, "Environment:"; Token.line_break ]
+      ; tokenize_base env
+      ]
+  ;;
 end
 
 let eval ~(env : Env.t) : t -> (t, Error.t) result = function
