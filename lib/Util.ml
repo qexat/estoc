@@ -3,8 +3,6 @@ let ( let* ) = Result.bind
 module Name = struct
   type t = string
 
-  let repr : t -> string = fun name -> name
-
   open Ansifmt
 
   let tokenize : t -> Formatting.Tree.t =
@@ -15,8 +13,6 @@ end
 
 module Index = struct
   type t = int
-
-  let repr : t -> string = Printf.sprintf "?%d"
 
   let generator : start:t -> unit -> t =
     fun ~start ->
